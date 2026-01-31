@@ -23,6 +23,7 @@ const LINES = [
 const THEMES = [
   { id: 'cosmic', label: 'Cosmic' },
   { id: 'western', label: 'Western' },
+  { id: 'disco', label: 'Disco' },
 ]
 
 const emptyBoard = () => Array(9).fill(null)
@@ -203,22 +204,25 @@ export default function App() {
 
   const status = useMemo(() => {
     if (result === 'human') {
-      return theme === 'western'
-        ? 'You outdrew the outlaw. Victory.'
-        : 'You aligned the stars. Victory.'
+      if (theme === 'western') return 'You outdrew the outlaw. Victory.'
+      if (theme === 'disco') return 'You owned the dance floor. Victory.'
+      return 'You aligned the stars. Victory.'
     }
     if (result === 'ai') {
-      return theme === 'western'
-        ? 'The outlaw got the drop on you.'
-        : 'Astro AI controls this sector.'
+      if (theme === 'western') return 'The outlaw got the drop on you.'
+      if (theme === 'disco') return 'The DJ dropped a beat you couldn’t dodge.'
+      return 'Astro AI controls this sector.'
     }
     if (result === 'draw') {
-      return theme === 'western'
-        ? 'Standoff at high noon. Draw.'
-        : 'Balanced universe. Draw.'
+      if (theme === 'western') return 'Standoff at high noon. Draw.'
+      if (theme === 'disco') return 'Same groove, same score. Draw.'
+      return 'Balanced universe. Draw.'
     }
     if (turn === human) return `Your move (${human}).`
-    return theme === 'western' ? 'The outlaw is thinking…' : 'Astro AI is plotting…'
+
+    if (theme === 'western') return 'The outlaw is thinking…'
+    if (theme === 'disco') return 'The DJ is cueing up a move…'
+    return 'Astro AI is plotting…'
   }, [human, result, theme, turn])
 
   // Derive result whenever board changes.
@@ -299,8 +303,10 @@ export default function App() {
           <div className="stars s2" />
           <div className="stars s3" />
         </div>
-      ) : (
+      ) : theme === 'western' ? (
         <div className="western-backdrop" aria-hidden="true" />
+      ) : (
+        <div className="disco-backdrop" aria-hidden="true" />
       )}
 
       <main className="space-card">
@@ -308,13 +314,23 @@ export default function App() {
           <p className="eyebrow">
             {theme === 'western'
               ? 'Frontier Saloon // Human vs Outlaw AI'
-              : 'Mission Control // Human vs Astro AI'}
+              : theme === 'disco'
+                ? 'Mirrorball Arena // Human vs DJ AI'
+                : 'Mission Control // Human vs Astro AI'}
           </p>
-          <h1>{theme === 'western' ? 'Western Tic Tac Toe' : 'Cosmic Tic Tac Toe'}</h1>
+          <h1>
+            {theme === 'western'
+              ? 'Western Tic Tac Toe'
+              : theme === 'disco'
+                ? 'Disco Tic Tac Toe'
+                : 'Cosmic Tic Tac Toe'}
+          </h1>
           <p className="subtitle">
             {theme === 'western'
               ? 'Dusty grid. Quick hands. Best of the badlands.'
-              : 'Neon grid. Cold logic. Best-of-the-void.'}
+              : theme === 'disco'
+                ? 'Glitter grid. Loud moves. Best-of-the-boogie.'
+                : 'Neon grid. Cold logic. Best-of-the-void.'}
           </p>
         </header>
 

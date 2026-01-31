@@ -119,6 +119,58 @@
   --win-glow: rgba(255, 195, 120, 0.12);
 }
 
+/* Disco theme */
+.space-app.theme-disco {
+  --app-fg: rgba(245, 245, 255, 0.94);
+  --muted-fg: rgba(235, 235, 255, 0.74);
+
+  --card-bg: rgba(10, 10, 18, 0.78);
+  --card-bg-2: rgba(14, 14, 26, 0.7);
+  --card-border: rgba(255, 255, 255, 0.14);
+  --card-inset: rgba(255, 255, 255, 0.06);
+
+  --panel-bg: rgba(255, 255, 255, 0.05);
+  --panel-border: rgba(255, 255, 255, 0.12);
+
+  --toggle-bg: rgba(0, 0, 0, 0.42);
+  --toggle-border: rgba(255, 255, 255, 0.12);
+
+  --button-bg: rgba(255, 255, 255, 0.06);
+  --button-border: rgba(255, 255, 255, 0.16);
+  --button-hover-border: rgba(255, 234, 150, 0.55);
+  --button-hover-ring: rgba(255, 234, 150, 0.14);
+
+  --active-bg: linear-gradient(
+    90deg,
+    rgba(255, 234, 150, 0.26),
+    rgba(255, 122, 217, 0.22),
+    rgba(118, 243, 255, 0.22)
+  );
+  --active-border: rgba(255, 255, 255, 0.28);
+  --active-ring: rgba(255, 234, 150, 0.12);
+  --active-glow: rgba(255, 122, 217, 0.16);
+
+  --title-gradient: linear-gradient(90deg, #ffea96, #ff7ad9, #76f3ff);
+
+  --board-bg: radial-gradient(
+    circle at 50% 0%,
+    rgba(255, 234, 150, 0.12),
+    rgba(0, 0, 0, 0.28)
+  );
+  --board-border: rgba(255, 255, 255, 0.12);
+
+  --cell-bg: rgba(0, 0, 0, 0.42);
+  --cell-border: rgba(255, 255, 255, 0.16);
+  --cell-inset: rgba(255, 255, 255, 0.04);
+
+  --glyph-shadow-1: rgba(255, 234, 150, 0.2);
+  --glyph-shadow-2: rgba(255, 122, 217, 0.16);
+
+  --win-border: rgba(118, 243, 255, 0.7);
+  --win-ring: rgba(118, 243, 255, 0.2);
+  --win-glow: rgba(118, 243, 255, 0.14);
+}
+
 .space-card {
   width: min(980px, 100%);
   border-radius: 24px;
@@ -164,6 +216,10 @@ h1 {
 
 .space-app.theme-western .subtitle {
   color: rgba(255, 235, 210, 0.78);
+}
+
+.space-app.theme-disco .subtitle {
+  color: rgba(235, 235, 255, 0.78);
 }
 
 .control-grid {
@@ -339,6 +395,10 @@ button.ghost {
   color: rgba(255, 248, 236, 0.88);
 }
 
+.space-app.theme-disco .status {
+  color: rgba(245, 245, 255, 0.88);
+}
+
 .actions {
   margin-top: 14px;
 }
@@ -473,6 +533,70 @@ button.ghost {
     radial-gradient(1px 1px at 140px 60px, rgba(216, 140, 72, 0.5) 50%, transparent 55%);
   background-size: 260px 240px;
   mix-blend-mode: overlay;
+}
+
+/* Disco backdrop (no assets; conic gradients + sparkles) */
+.disco-backdrop {
+  position: absolute;
+  inset: -30vh -30vw;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 234, 150, 0.18), transparent 42%),
+    radial-gradient(circle at 80% 18%, rgba(255, 122, 217, 0.16), transparent 45%),
+    radial-gradient(circle at 40% 82%, rgba(118, 243, 255, 0.14), transparent 46%),
+    linear-gradient(180deg, #070710, #05050b 60%, #040409);
+}
+
+.disco-backdrop::before {
+  content: '';
+  position: absolute;
+  inset: -10%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(255, 234, 150, 0.16),
+    rgba(255, 122, 217, 0.14),
+    rgba(118, 243, 255, 0.14),
+    rgba(255, 234, 150, 0.16)
+  );
+  filter: blur(10px);
+  opacity: 0.65;
+  mix-blend-mode: screen;
+  animation: disco-spin 18s linear infinite;
+}
+
+.disco-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background-image:
+    radial-gradient(1px 1px at 12px 18px, rgba(255, 255, 255, 0.8) 50%, transparent 55%),
+    radial-gradient(2px 2px at 84px 122px, rgba(255, 234, 150, 0.8) 50%, transparent 55%),
+    radial-gradient(1px 1px at 160px 64px, rgba(255, 122, 217, 0.75) 50%, transparent 55%),
+    radial-gradient(2px 2px at 210px 180px, rgba(118, 243, 255, 0.72) 50%, transparent 55%);
+  background-size: 280px 260px;
+  mix-blend-mode: screen;
+  animation: disco-twinkle 2.8s ease-in-out infinite;
+}
+
+@keyframes disco-spin {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+  to {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes disco-twinkle {
+  0%,
+  100% {
+    opacity: 0.14;
+  }
+  50% {
+    opacity: 0.24;
+  }
 }
 
 /* Layout responsiveness */
