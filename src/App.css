@@ -1,32 +1,136 @@
 /*
-  Space theme, neon accents, subtle motion.
+  Themes: Cosmic + Western
   Intentionally no external assets/deps.
 */
 
+/* Base layout + shared tokens */
 .space-app {
+  --app-fg: rgba(255, 255, 255, 0.92);
+  --muted-fg: rgba(255, 255, 255, 0.72);
+
+  --card-bg: rgba(8, 9, 15, 0.78);
+  --card-bg-2: rgba(10, 12, 20, 0.72);
+  --card-border: rgba(255, 255, 255, 0.12);
+  --card-inset: rgba(0, 255, 255, 0.06);
+
+  --panel-bg: rgba(255, 255, 255, 0.04);
+  --panel-border: rgba(255, 255, 255, 0.1);
+
+  --toggle-bg: rgba(0, 0, 0, 0.35);
+  --toggle-border: rgba(255, 255, 255, 0.1);
+
+  --button-bg: rgba(255, 255, 255, 0.05);
+  --button-border: rgba(255, 255, 255, 0.14);
+  --button-hover-border: rgba(118, 243, 255, 0.55);
+  --button-hover-ring: rgba(118, 243, 255, 0.12);
+
+  --active-bg: linear-gradient(
+    90deg,
+    rgba(118, 243, 255, 0.26),
+    rgba(203, 163, 255, 0.26)
+  );
+  --active-border: rgba(255, 255, 255, 0.28);
+  --active-ring: rgba(203, 163, 255, 0.12);
+  --active-glow: rgba(118, 243, 255, 0.18);
+
+  --title-gradient: linear-gradient(90deg, #76f3ff, #cba3ff, #ff7ad9);
+
+  --board-bg: radial-gradient(
+    circle at 50% 0%,
+    rgba(118, 243, 255, 0.12),
+    rgba(0, 0, 0, 0.25)
+  );
+  --board-border: rgba(255, 255, 255, 0.1);
+
+  --cell-bg: rgba(0, 0, 0, 0.35);
+  --cell-border: rgba(255, 255, 255, 0.14);
+  --cell-inset: rgba(255, 255, 255, 0.03);
+
+  --glyph-shadow-1: rgba(118, 243, 255, 0.22);
+  --glyph-shadow-2: rgba(203, 163, 255, 0.15);
+
+  --win-border: rgba(255, 122, 217, 0.7);
+  --win-ring: rgba(255, 122, 217, 0.2);
+  --win-glow: rgba(255, 122, 217, 0.18);
+
   min-height: 100vh;
   display: grid;
   place-items: center;
   padding: 28px 16px;
   position: relative;
   overflow: hidden;
+  color: var(--app-fg);
+}
+
+/* Cosmic theme */
+.space-app.theme-cosmic {
+  --button-hover-border: rgba(118, 243, 255, 0.55);
+  --button-hover-ring: rgba(118, 243, 255, 0.12);
+}
+
+/* Western theme */
+.space-app.theme-western {
+  --app-fg: rgba(255, 248, 236, 0.94);
+  --muted-fg: rgba(255, 235, 210, 0.74);
+
+  --card-bg: rgba(34, 18, 10, 0.78);
+  --card-bg-2: rgba(58, 28, 14, 0.62);
+  --card-border: rgba(255, 236, 208, 0.14);
+  --card-inset: rgba(255, 210, 150, 0.05);
+
+  --panel-bg: rgba(255, 245, 230, 0.06);
+  --panel-border: rgba(255, 236, 208, 0.14);
+
+  --toggle-bg: rgba(25, 13, 7, 0.55);
+  --toggle-border: rgba(255, 236, 208, 0.16);
+
+  --button-bg: rgba(255, 245, 230, 0.06);
+  --button-border: rgba(255, 236, 208, 0.16);
+  --button-hover-border: rgba(255, 208, 132, 0.55);
+  --button-hover-ring: rgba(255, 208, 132, 0.16);
+
+  --active-bg: linear-gradient(
+    90deg,
+    rgba(255, 208, 132, 0.24),
+    rgba(216, 140, 72, 0.22)
+  );
+  --active-border: rgba(255, 236, 208, 0.25);
+  --active-ring: rgba(255, 208, 132, 0.12);
+  --active-glow: rgba(255, 195, 120, 0.18);
+
+  --title-gradient: linear-gradient(90deg, #ffd28f, #f2a24f, #d66c3a);
+
+  --board-bg: radial-gradient(
+    circle at 50% 0%,
+    rgba(255, 208, 132, 0.14),
+    rgba(20, 10, 6, 0.35)
+  );
+  --board-border: rgba(255, 236, 208, 0.14);
+
+  --cell-bg: rgba(25, 13, 7, 0.6);
+  --cell-border: rgba(255, 236, 208, 0.16);
+  --cell-inset: rgba(255, 236, 208, 0.05);
+
+  --glyph-shadow-1: rgba(255, 208, 132, 0.18);
+  --glyph-shadow-2: rgba(216, 140, 72, 0.14);
+
+  --win-border: rgba(255, 221, 166, 0.7);
+  --win-ring: rgba(255, 195, 120, 0.18);
+  --win-glow: rgba(255, 195, 120, 0.12);
 }
 
 .space-card {
   width: min(980px, 100%);
   border-radius: 24px;
   padding: clamp(18px, 3.6vw, 34px);
-  background: linear-gradient(
-    180deg,
-    rgba(10, 12, 20, 0.72),
-    rgba(8, 9, 15, 0.78)
-  );
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(180deg, var(--card-bg-2), var(--card-bg));
+  border: 1px solid var(--card-border);
   box-shadow:
     0 20px 70px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(0, 255, 255, 0.06) inset;
+    0 0 0 1px var(--card-inset) inset;
   backdrop-filter: blur(10px);
   position: relative;
+  z-index: 1;
 }
 
 .app-header {
@@ -38,7 +142,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.68);
+  color: var(--muted-fg);
   margin: 0 0 8px;
 }
 
@@ -46,7 +150,7 @@ h1 {
   margin: 0;
   font-size: clamp(1.9rem, 4vw, 3.05rem);
   line-height: 1.1;
-  background: linear-gradient(90deg, #76f3ff, #cba3ff, #ff7ad9);
+  background: var(--title-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -58,24 +162,28 @@ h1 {
   max-width: 52ch;
 }
 
+.space-app.theme-western .subtitle {
+  color: rgba(255, 235, 210, 0.78);
+}
+
 .control-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 14px;
   margin: 18px 0 20px;
 }
 
 .control-panel {
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--panel-border);
+  background: var(--panel-bg);
   padding: 14px;
 }
 
 .panel-label {
   margin: 0 0 10px;
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--muted-fg);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -85,15 +193,15 @@ h1 {
   gap: 8px;
   padding: 6px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--toggle-bg);
+  border: 1px solid var(--toggle-border);
 }
 
 button {
   appearance: none;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--button-border);
+  background: var(--button-bg);
+  color: var(--app-fg);
   padding: 10px 14px;
   border-radius: 12px;
   cursor: pointer;
@@ -106,8 +214,8 @@ button {
 
 button:hover {
   transform: translateY(-1px);
-  border-color: rgba(118, 243, 255, 0.55);
-  box-shadow: 0 0 0 3px rgba(118, 243, 255, 0.12);
+  border-color: var(--button-hover-border);
+  box-shadow: 0 0 0 3px var(--button-hover-ring);
 }
 
 button:active {
@@ -125,11 +233,11 @@ button.ghost {
 }
 
 .toggle button.active {
-  background: linear-gradient(90deg, rgba(118, 243, 255, 0.26), rgba(203, 163, 255, 0.26));
-  border-color: rgba(255, 255, 255, 0.28);
+  background: var(--active-bg);
+  border-color: var(--active-border);
   box-shadow:
-    0 0 0 3px rgba(203, 163, 255, 0.12),
-    0 0 22px rgba(118, 243, 255, 0.18);
+    0 0 0 3px var(--active-ring),
+    0 0 22px var(--active-glow);
 }
 
 .scoreboard .score-row {
@@ -141,6 +249,11 @@ button.ghost {
   background: rgba(0, 0, 0, 0.25);
   border: 1px solid rgba(255, 255, 255, 0.08);
   margin-bottom: 8px;
+}
+
+.space-app.theme-western .scoreboard .score-row {
+  background: rgba(25, 13, 7, 0.38);
+  border-color: rgba(255, 236, 208, 0.12);
 }
 
 .scoreboard .score-row:last-child {
@@ -160,8 +273,8 @@ button.ghost {
   gap: 12px;
   padding: 16px;
   border-radius: 18px;
-  background: radial-gradient(circle at 50% 0%, rgba(118, 243, 255, 0.12), rgba(0, 0, 0, 0.25));
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--board-bg);
+  border: 1px solid var(--board-border);
 }
 
 .cell {
@@ -170,10 +283,10 @@ button.ghost {
   place-items: center;
   font-size: clamp(2.2rem, 6vw, 3.2rem);
   border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--cell-border);
+  background: var(--cell-bg);
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+    0 0 0 1px var(--cell-inset) inset,
     0 10px 24px rgba(0, 0, 0, 0.35);
 }
 
@@ -186,8 +299,8 @@ button.ghost {
   display: inline-block;
   transform: translateY(1px);
   text-shadow:
-    0 0 10px rgba(118, 243, 255, 0.22),
-    0 0 18px rgba(203, 163, 255, 0.15);
+    0 0 10px var(--glyph-shadow-1),
+    0 0 18px var(--glyph-shadow-2);
   animation: pop 180ms ease;
 }
 
@@ -203,23 +316,27 @@ button.ghost {
 }
 
 .cell.winning {
-  border-color: rgba(255, 122, 217, 0.7);
+  border-color: var(--win-border);
   box-shadow:
-    0 0 0 3px rgba(255, 122, 217, 0.2),
-    0 0 40px rgba(255, 122, 217, 0.18);
+    0 0 0 3px var(--win-ring),
+    0 0 40px var(--win-glow);
 }
 
 .status-panel {
   border-radius: 18px;
   padding: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--panel-border);
+  background: var(--panel-bg);
 }
 
 .status {
   margin: 0;
   color: rgba(255, 255, 255, 0.84);
   line-height: 1.4;
+}
+
+.space-app.theme-western .status {
+  color: rgba(255, 248, 236, 0.88);
 }
 
 .actions {
@@ -230,15 +347,27 @@ button.ghost {
   width: 100%;
 }
 
-/* Starfield layers */
+/* Cosmic starfield layers */
 .starfield {
   position: absolute;
   inset: -30vh -30vw;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(circle at 20% 10%, rgba(118, 243, 255, 0.12), transparent 40%),
-    radial-gradient(circle at 80% 20%, rgba(255, 122, 217, 0.12), transparent 42%),
-    radial-gradient(circle at 40% 80%, rgba(203, 163, 255, 0.14), transparent 45%),
+  background: radial-gradient(
+      circle at 20% 10%,
+      rgba(118, 243, 255, 0.12),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(255, 122, 217, 0.12),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 40% 80%,
+      rgba(203, 163, 255, 0.14),
+      transparent 45%
+    ),
     linear-gradient(180deg, #060612, #05050b 60%, #040409);
 }
 
@@ -253,18 +382,42 @@ button.ghost {
 /* Tiny stars pattern via gradients */
 .stars.s1 {
   background-image:
-    radial-gradient(1px 1px at 12px 18px, rgba(255, 255, 255, 0.8) 50%, transparent 52%),
-    radial-gradient(1px 1px at 80px 120px, rgba(118, 243, 255, 0.8) 50%, transparent 52%),
-    radial-gradient(1px 1px at 140px 60px, rgba(203, 163, 255, 0.8) 50%, transparent 52%);
+    radial-gradient(
+      1px 1px at 12px 18px,
+      rgba(255, 255, 255, 0.8) 50%,
+      transparent 52%
+    ),
+    radial-gradient(
+      1px 1px at 80px 120px,
+      rgba(118, 243, 255, 0.8) 50%,
+      transparent 52%
+    ),
+    radial-gradient(
+      1px 1px at 140px 60px,
+      rgba(203, 163, 255, 0.8) 50%,
+      transparent 52%
+    );
   background-size: 180px 160px;
   animation: drift 30s linear infinite;
 }
 
 .stars.s2 {
   background-image:
-    radial-gradient(1px 1px at 40px 90px, rgba(255, 255, 255, 0.65) 50%, transparent 52%),
-    radial-gradient(1px 1px at 110px 20px, rgba(255, 122, 217, 0.65) 50%, transparent 52%),
-    radial-gradient(1px 1px at 160px 130px, rgba(118, 243, 255, 0.65) 50%, transparent 52%);
+    radial-gradient(
+      1px 1px at 40px 90px,
+      rgba(255, 255, 255, 0.65) 50%,
+      transparent 52%
+    ),
+    radial-gradient(
+      1px 1px at 110px 20px,
+      rgba(255, 122, 217, 0.65) 50%,
+      transparent 52%
+    ),
+    radial-gradient(
+      1px 1px at 160px 130px,
+      rgba(118, 243, 255, 0.65) 50%,
+      transparent 52%
+    );
   background-size: 220px 200px;
   animation: drift 44s linear infinite reverse;
   opacity: 0.55;
@@ -272,8 +425,16 @@ button.ghost {
 
 .stars.s3 {
   background-image:
-    radial-gradient(2px 2px at 80px 40px, rgba(255, 255, 255, 0.42) 50%, transparent 52%),
-    radial-gradient(2px 2px at 180px 140px, rgba(203, 163, 255, 0.42) 50%, transparent 52%);
+    radial-gradient(
+      2px 2px at 80px 40px,
+      rgba(255, 255, 255, 0.42) 50%,
+      transparent 52%
+    ),
+    radial-gradient(
+      2px 2px at 180px 140px,
+      rgba(203, 163, 255, 0.42) 50%,
+      transparent 52%
+    );
   background-size: 320px 300px;
   animation: drift 70s linear infinite;
   opacity: 0.35;
@@ -288,17 +449,35 @@ button.ghost {
   }
 }
 
+/* Western backdrop (no assets; gradients + subtle grain) */
+.western-backdrop {
+  position: absolute;
+  inset: -30vh -30vw;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 30% 15%, rgba(255, 210, 150, 0.28), transparent 42%),
+    radial-gradient(circle at 80% 10%, rgba(255, 170, 110, 0.18), transparent 45%),
+    radial-gradient(circle at 50% 70%, rgba(90, 40, 18, 0.35), transparent 55%),
+    linear-gradient(180deg, #2a140a, #0f0704 60%, #070302);
+}
+
+.western-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  background-image:
+    radial-gradient(1px 1px at 12px 18px, rgba(255, 248, 236, 0.6) 50%, transparent 55%),
+    radial-gradient(1px 1px at 80px 120px, rgba(255, 208, 132, 0.55) 50%, transparent 55%),
+    radial-gradient(1px 1px at 140px 60px, rgba(216, 140, 72, 0.5) 50%, transparent 55%);
+  background-size: 260px 240px;
+  mix-blend-mode: overlay;
+}
+
 /* Layout responsiveness */
 @media (max-width: 860px) {
-  .control-grid {
-    grid-template-columns: 1fr;
-  }
   .board-section {
     grid-template-columns: 1fr;
   }
-}
-
-/* Make sure card sits above the starfield */
-.space-card {
-  z-index: 1;
 }
