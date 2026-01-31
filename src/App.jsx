@@ -9,6 +9,20 @@ import './App.css'
  * - Optional Web Audio SFX (no external assets).
  */
 
+const THEME_STORAGE_KEY = 'tic-tac-toe-theme'
+const THEMES = [
+  { value: 'space', label: 'Space' },
+  { value: 'western', label: 'Western' },
+]
+
+const getInitialTheme = () => {
+  if (typeof window === 'undefined') return 'space'
+  const stored = window.localStorage.getItem(THEME_STORAGE_KEY)
+  if (stored === 'space' || stored === 'western') return stored
+  window.localStorage.setItem(THEME_STORAGE_KEY, 'space')
+  return 'space'
+}
+
 const LINES = [
   [0, 1, 2],
   [3, 4, 5],
@@ -148,6 +162,7 @@ export default function App() {
   const [winLine, setWinLine] = useState([])
   const [score, setScore] = useState({ wins: 0, losses: 0, draws: 0 })
   const [soundOn, setSoundOn] = useState(true)
+  const [theme, setTheme] = useState(getInitialTheme)
 
   const ai = useMemo(() => (human === 'X' ? 'O' : 'X'), [human])
   const beep = useBeep(soundOn)
@@ -184,6 +199,14 @@ export default function App() {
     if (turn === human) return `Your move (${human}).`
     return 'Astro AI is plotting…'
   }, [human, result, turn])
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    document.documentElement.dataset.theme = theme
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme)
+    }
+  }, [theme])
 
   // Derive result whenever board changes.
   useEffect(() => {
@@ -282,6 +305,23 @@ export default function App() {
                   onClick={() => chooseSymbol(sym)}
                 >
                   {sym}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="control-panel">
+            <p className="panel-label">Theme</p>
+            <div className="toggle">
+              {THEMES.map(({ value, label }) => (
+                <button
+                  key={value}
+                  type="button"
+                  className={value === theme ? 'active' : ''}
+                  onClick={() => setTheme(value)}
+                  aria-pressed={value === theme}
+                >
+                  {label}
                 </button>
               ))}
             </div>
