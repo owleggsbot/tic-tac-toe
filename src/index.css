@@ -1,15 +1,25 @@
 :root {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --font-base: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --text-color: rgba(255, 255, 255, 0.92);
+  --body-bg: #05050b;
+
+  font-family: var(--font-base);
   line-height: 1.5;
   font-weight: 400;
 
-  color: rgba(255, 255, 255, 0.92);
-  background: #05050b;
+  color: var(--text-color);
+  background: var(--body-bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+:root[data-theme='western'] {
+  --font-base: 'Roboto Slab', 'Rockwell', 'Segoe UI', Georgia, serif;
+  --text-color: #fdf1e0;
+  --body-bg: linear-gradient(180deg, #1d0c03, #2b1407 55%, #140802);
 }
 
 * {
@@ -18,6 +28,9 @@
 
 body {
   margin: 0;
+  background: var(--body-bg);
+  font-family: inherit;
+  color: inherit;
 }
 
 a {
