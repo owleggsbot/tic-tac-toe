@@ -3,25 +3,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 
 /**
- * Cosmic Tic Tac Toe
+ * Tic Tac Toe
  * - Human vs AI (minimax) with slight randomness among best moves.
- * - Space/neon styling + subtle animations.
+ * - Theme switcher (Cosmic + Western).
  * - Optional Web Audio SFX (no external assets).
  */
 
-const THEME_STORAGE_KEY = 'tic-tac-toe-theme'
-const THEMES = [
-  { value: 'space', label: 'Space' },
-  { value: 'western', label: 'Western' },
-]
-
-const getInitialTheme = () => {
-  if (typeof window === 'undefined') return 'space'
-  const stored = window.localStorage.getItem(THEME_STORAGE_KEY)
-  if (stored === 'space' || stored === 'western') return stored
-  window.localStorage.setItem(THEME_STORAGE_KEY, 'space')
-  return 'space'
-}
+// theme persistence is handled below via localStorage key `ttt-theme`
 
 const LINES = [
   [0, 1, 2],
@@ -32,6 +20,12 @@ const LINES = [
   [2, 5, 8],
   [0, 4, 8],
   [2, 4, 6],
+]
+
+const THEMES = [
+  { id: 'cosmic', label: 'Cosmic' },
+  { id: 'western', label: 'Western' },
+  { id: 'disco', label: 'Disco' },
 ]
 
 const emptyBoard = () => Array(9).fill(null)
@@ -124,7 +118,7 @@ function useBeep(enabled) {
       const gain = ctx.createGain()
       const now = ctx.currentTime
 
-      // Small, pleasant sci-fi blips.
+      // Small, pleasant blips.
       const freq =
         kind === 'human'
           ? 740
@@ -162,13 +156,30 @@ export default function App() {
   const [winLine, setWinLine] = useState([])
   const [score, setScore] = useState({ wins: 0, losses: 0, draws: 0 })
   const [soundOn, setSoundOn] = useState(true)
-  const [theme, setTheme] = useState(getInitialTheme)
+  const [theme, setTheme] = useState(() => {
+    try {
+      const stored = window.localStorage.getItem('ttt-theme')
+      if (stored && THEMES.some((t) => t.id === stored)) return stored
+    } catch {
+      // ignore
+    }
+    return 'cosmic'
+  })
 
   const ai = useMemo(() => (human === 'X' ? 'O' : 'X'), [human])
   const beep = useBeep(soundOn)
 
   // Prevent double-counting a round.
   const scoredRef = useRef(null)
+
+  // Theme persistence.
+  useEffect(() => {
+    try {
+      window.localStorage.setItem('ttt-theme', theme)
+    } catch {
+      // ignore
+    }
+  }, [theme])
 
   const restartRound = useCallback(() => {
     setBoard(emptyBoard())
@@ -193,20 +204,34 @@ export default function App() {
   )
 
   const status = useMemo(() => {
-    if (result === 'human') return 'You aligned the stars. Victory.'
-    if (result === 'ai') return 'Astro AI controls this sector.'
-    if (result === 'draw') return 'Balanced universe. Draw.'
+    if (result === 'human') {
+      if (theme === 'western') return 'You outdrew the outlaw. Victory.'
+      if (theme === 'disco') return 'You owned the dance floor. Victory.'
+      return 'You aligned the stars. Victory.'
+    }
+    if (result === 'ai') {
+      if (theme === 'western') return 'The outlaw got the drop on you.'
+      if (theme === 'disco') return 'The DJ dropped a beat you couldn’t dodge.'
+      return 'Astro AI controls this sector.'
+    }
+    if (result === 'draw') {
+      if (theme === 'western') return 'Standoff at high noon. Draw.'
+      if (theme === 'disco') return 'Same groove, same score. Draw.'
+      return 'Balanced universe. Draw.'
+    }
     if (turn === human) return `Your move (${human}).`
-    return 'Astro AI is plotting…'
-  }, [human, result, turn])
 
+    if (theme === 'western') return 'The outlaw is thinking…'
+    if (theme === 'disco') return 'The DJ is cueing up a move…'
+    return 'Astro AI is plotting…'
+  }, [human, result, theme, turn])
+
+  // Apply theme to the document element (CSS hooks live on html[data-theme]).
   useEffect(() => {
     if (typeof document === 'undefined') return
     document.documentElement.dataset.theme = theme
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(THEME_STORAGE_KEY, theme)
-    }
   }, [theme])
+
 
   // Derive result whenever board changes.
   useEffect(() => {
@@ -279,30 +304,74 @@ export default function App() {
   }
 
   return (
-    <div className="space-app">
-      <div className="starfield" aria-hidden="true">
-        <div className="stars s1" />
-        <div className="stars s2" />
-        <div className="stars s3" />
-      </div>
+    <div className={`space-app theme-${theme}`} data-theme={theme}>
+      {theme === 'cosmic' ? (
+        <div className="starfield" aria-hidden="true">
+          <div className="stars s1" />
+          <div className="stars s2" />
+          <div className="stars s3" />
+        </div>
+      ) : theme === 'western' ? (
+        <div className="western-backdrop" aria-hidden="true" />
+      ) : (
+        <div className="disco-backdrop" aria-hidden="true" />
+      )}
 
       <main className="space-card">
         <header className="app-header">
-          <p className="eyebrow">Mission Control // Human vs Astro AI</p>
-          <h1>Cosmic Tic Tac Toe</h1>
-          <p className="subtitle">Neon grid. Cold logic. Best-of-the-void.</p>
+          <p className="eyebrow">
+            {theme === 'western'
+              ? 'Frontier Saloon // Human vs Outlaw AI'
+              : theme === 'disco'
+                ? 'Mirrorball Arena // Human vs DJ AI'
+                : 'Mission Control // Human vs Astro AI'}
+          </p>
+          <h1>
+            {theme === 'western'
+              ? 'Western Tic Tac Toe'
+              : theme === 'disco'
+                ? 'Disco Tic Tac Toe'
+                : 'Cosmic Tic Tac Toe'}
+          </h1>
+          <p className="subtitle">
+            {theme === 'western'
+              ? 'Dusty grid. Quick hands. Best of the badlands.'
+              : theme === 'disco'
+                ? 'Glitter grid. Loud moves. Best-of-the-boogie.'
+                : 'Neon grid. Cold logic. Best-of-the-void.'}
+          </p>
         </header>
 
         <section className="control-grid">
           <div className="control-panel">
+            <p className="panel-label">Theme</p>
+            <div className="toggle" role="tablist" aria-label="Theme">
+              {THEMES.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  className={t.id === theme ? 'active' : ''}
+                  onClick={() => setTheme(t.id)}
+                  role="tab"
+                  aria-selected={t.id === theme}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="control-panel">
             <p className="panel-label">Choose your insignia</p>
-            <div className="toggle">
+            <div className="toggle" role="tablist" aria-label="Choose your symbol">
               {['X', 'O'].map((sym) => (
                 <button
                   key={sym}
                   type="button"
                   className={sym === human ? 'active' : ''}
                   onClick={() => chooseSymbol(sym)}
+                  role="tab"
+                  aria-selected={sym === human}
                 >
                   {sym}
                 </button>
@@ -310,22 +379,7 @@ export default function App() {
             </div>
           </div>
 
-          <div className="control-panel">
-            <p className="panel-label">Theme</p>
-            <div className="toggle">
-              {THEMES.map(({ value, label }) => (
-                <button
-                  key={value}
-                  type="button"
-                  className={value === theme ? 'active' : ''}
-                  onClick={() => setTheme(value)}
-                  aria-pressed={value === theme}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
+          {/* Theme chooser moved to the tablist above */}
 
           <div className="control-panel scoreboard">
             <p className="panel-label">Battle log</p>
