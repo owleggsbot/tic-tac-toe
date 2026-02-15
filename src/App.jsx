@@ -9,6 +9,8 @@ import './App.css'
  * - Optional Web Audio SFX (no external assets).
  */
 
+// theme persistence is handled below via localStorage key `ttt-theme`
+
 const LINES = [
   [0, 1, 2],
   [3, 4, 5],
@@ -154,7 +156,15 @@ export default function App() {
   const [winLine, setWinLine] = useState([])
   const [score, setScore] = useState({ wins: 0, losses: 0, draws: 0 })
   const [soundOn, setSoundOn] = useState(true)
-  const [theme, setTheme] = useState('cosmic')
+  const [theme, setTheme] = useState(() => {
+    try {
+      const stored = window.localStorage.getItem('ttt-theme')
+      if (stored && THEMES.some((t) => t.id === stored)) return stored
+    } catch {
+      // ignore
+    }
+    return 'cosmic'
+  })
 
   const ai = useMemo(() => (human === 'X' ? 'O' : 'X'), [human])
   const beep = useBeep(soundOn)
@@ -163,15 +173,6 @@ export default function App() {
   const scoredRef = useRef(null)
 
   // Theme persistence.
-  useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem('ttt-theme')
-      if (stored && THEMES.some((t) => t.id === stored)) setTheme(stored)
-    } catch {
-      // ignore
-    }
-  }, [])
-
   useEffect(() => {
     try {
       window.localStorage.setItem('ttt-theme', theme)
@@ -224,6 +225,13 @@ export default function App() {
     if (theme === 'disco') return 'The DJ is cueing up a move…'
     return 'Astro AI is plotting…'
   }, [human, result, theme, turn])
+
+  // Apply theme to the document element (CSS hooks live on html[data-theme]).
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    document.documentElement.dataset.theme = theme
+  }, [theme])
+
 
   // Derive result whenever board changes.
   useEffect(() => {
@@ -370,6 +378,8 @@ export default function App() {
               ))}
             </div>
           </div>
+
+          {/* Theme chooser moved to the tablist above */}
 
           <div className="control-panel scoreboard">
             <p className="panel-label">Battle log</p>
